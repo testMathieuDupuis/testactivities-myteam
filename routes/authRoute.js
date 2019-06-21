@@ -15,4 +15,19 @@ module.exports = authRoutes => {
         '/confirme',
         AuthController.confirmeEmail
     )
+
+    authRoutes.post(
+        '/forgot',
+        AuthController.forgotPassword
+    )
+
+    authRoutes.post(
+        '/reset',
+        AuthController.resetPassword
+    )
+
+    authRoutes.post(
+        '/delete',
+        AuthController.deleteUser
+    )
 }
