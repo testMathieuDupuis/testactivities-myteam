@@ -1,4 +1,5 @@
 const AuthController = require('../controllers/AuthController')
+const UploadController = require('../controllers/UploadController')
 
 module.exports = authRoutes => {
     authRoutes.post(
@@ -29,5 +30,9 @@ module.exports = authRoutes => {
     authRoutes.post(
         '/delete',
         AuthController.deleteUser
+    )
+    authRoutes.post(
+        '/upload',
+        UploadController.upload
     )
 }
