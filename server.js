@@ -11,5 +11,7 @@ app.use(bodyParser.json())
 app.use(cors())
 
 require('./routes/authRoute')(app)
+require('./routes/uploadRoute')(app)
+require('./routes/projectRoute')(app)
 
 app.listen(serverConfig.port)

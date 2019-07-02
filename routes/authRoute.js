@@ -31,8 +31,4 @@ module.exports = authRoutes => {
         '/delete',
         AuthController.deleteUser
     )
-    authRoutes.post(
-        '/upload',
-        UploadController.upload
-    )
 }
