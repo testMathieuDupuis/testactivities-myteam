@@ -4,7 +4,6 @@ module.exports = uploadRoutes => {
     
     uploadRoutes.post(
         '/upload',
-        UploadController.upload
-        
+        UploadController.uploadFile
     )
 }

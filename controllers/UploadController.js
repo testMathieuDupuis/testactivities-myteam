@@ -3,29 +3,27 @@ var app = express();
 var multer = require('multer')
 var cors = require('cors');
 
+const fs = require('fs');
+const AWS = require('aws-sdk');
+const s3 = new AWS.S3({
+  accessKeyId: 'AKIAU7A6HHUS6QULJXZI',
+  secretAccessKey: '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'
+});
+
 module.exports = {
 
-  async upload(req, res) {
-    console.log("test!!!");
-    app.use(cors())
-    var storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        cb(null, 'public')
-      },
-      filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname)
-      }
-    })
-
-    var upload = multer({ storage: storage }).single('file')
-    upload(req, res, function (err) {
-      if (err instanceof multer.MulterError) {
-        return res.status(500).json(err)
-      } else if (err) {
-        return res.status(500).json(err)
-      }
-      return res.status(200).send(req.file)
-
-    })
+  async uploadFile(req, res) {
+    fs.readFile(req.body.filePath, (err, data) => {
+      if (err) throw err;
+      const params = {
+          Bucket: 'ratio-dev-raw',
+          Key: 'fileTest.pdf', 
+          Body: JSON.stringify(data, null, 2)
+      };
+      s3.upload(params, function(s3Err, data) {
+          if (s3Err) throw s3Err
+          res.send(`File uploaded successfully at ${data.Location}`);
+      });
+   });
   }
 }
