@@ -6,9 +6,7 @@ var cors = require('cors');
 var AWS = require("aws-sdk");
 
 AWS.config.update({
-  region: "ca-central-1",
-  accessKeyId: 'AKIAU7A6HHUS6QULJXZI',
-  secretAccessKey: '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'
+  region: "ca-central-1"
 });
 
 var docClient = new AWS.DynamoDB.DocumentClient();

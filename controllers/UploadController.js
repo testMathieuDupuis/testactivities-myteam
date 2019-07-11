@@ -5,10 +5,7 @@ var cors = require('cors');
 
 const fs = require('fs');
 const AWS = require('aws-sdk');
-const s3 = new AWS.S3({
-  accessKeyId: 'AKIAU7A6HHUS6QULJXZI',
-  secretAccessKey: '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'
-});
+const s3 = new AWS.S3();
 
 module.exports = {
 
