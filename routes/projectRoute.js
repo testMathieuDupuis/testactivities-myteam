@@ -11,4 +11,9 @@ module.exports = projectRoutes => {
         '/getProject',
         ProjectController.getProject
     )
+
+    projectRoutes.post(
+        '/createProject',
+        ProjectController.createProject
+    )
 }
