@@ -1,0 +1,10 @@
+{
+  "lambda": {
+    "role": "ratio_backend-executor",
+    "name": "ratio_backend",
+    "region": "ca-central-1"
+  },
+  "api": {
+    "id": "8bjyamm70a"
+  }
+}
