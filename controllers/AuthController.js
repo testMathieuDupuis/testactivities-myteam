@@ -118,5 +118,16 @@ module.exports = {
                 }
             });
         }
+    },
+
+    async logout(req, res) {
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (cognitoUser != null) {
+            cognitoUser.signOut();
+            res.send({message: "SUCCESS"});
+            return;
+        }
+        res.send({message: "FAILED"});
     }
 }

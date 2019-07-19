@@ -31,4 +31,9 @@ module.exports = authRoutes => {
         '/delete',
         AuthController.deleteUser
     )
+
+    authRoutes.post(
+        '/logout',
+        AuthController.logout
+    )
 }
