@@ -8,6 +8,12 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const pdf = require('pdf-parse');
 
+AWS.config.update({
+  region: "ca-central-1"
+});
+
+var docClient = new AWS.DynamoDB.DocumentClient();
+
 module.exports = {
 
   async uploadFile(req, res) {
@@ -30,15 +36,39 @@ module.exports = {
     s3.getObject(params, function (err, resp) {
       if (err) res.send(err);
       else {
-        pdf(resp.Body).then(function (data) {
-          resultsExtract = [];
-          lines = data.text.split("[");
-          for (i = 0; i < lines.length; i++) {
-            if (lines[i].indexOf('faute') >= 0 && lines[i].indexOf('dommage') >= 0) {
-              resultsExtract.push("[" + lines[i]);
+        pdf(resp.Body).then(function (textData) {
+          var params = {
+            TableName: "ratio_words"
+          };
+          docClient.scan(params, onScan);
+          function onScan(err, data) {
+            if (err) {
+              console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+            } else {
+
+              resultsExtract = [];
+              lines = textData.text.split("[");
+              var maxVal = 0;
+              for (i = 0; i < lines.length; i++) {
+                var count = 0;
+                data.Items.forEach(element => {
+                  if (lines[i].indexOf(element.word) >= 0) {
+                    count += element.weigth;
+                  }
+                });
+
+                if(count > maxVal){
+                  resultsExtract = [];
+                  resultsExtract.push("[" + lines[i]);
+                  maxVal = count;
+                }
+                else if(count == maxVal){
+                  resultsExtract.push("[" + lines[i]);
+                }
+              }
+              res.send(resultsExtract);
             }
           }
-          res.send(resultsExtract);
         });
       }
     });
