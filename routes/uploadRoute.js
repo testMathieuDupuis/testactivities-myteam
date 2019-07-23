@@ -6,4 +6,9 @@ module.exports = uploadRoutes => {
         '/upload',
         UploadController.uploadFile
     )
+
+    uploadRoutes.get(
+        '/readFile',
+        UploadController.readFile
+    )
 }
