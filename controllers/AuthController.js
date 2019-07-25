@@ -129,5 +129,27 @@ module.exports = {
             return;
         }
         res.send({message: "FAILED"});
+    },
+
+    async changePassword(req, res) {
+        var cognitoUser = userPool.getCurrentUser();
+        if (cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (session.isValid()) {
+                    cognitoUser.changePassword(req.body.oldPassword, req.body.newPassword, function(err, result) {
+                        if (err) {
+                            res.send(err.message);
+                            return;
+                        }
+                        res.send(result);
+                    });
+                } else {
+                    res.send(err.message);
+                }
+            });
+        }
+        else{
+            res.send("FAILED: NOT LOGGED IN");
+        }
     }
 }

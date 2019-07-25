@@ -36,4 +36,9 @@ module.exports = authRoutes => {
         '/logout',
         AuthController.logout
     )
+
+    authRoutes.post(
+        '/changePassword',
+        AuthController.changePassword
+    )
 }
