@@ -4,12 +4,14 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "local": "sam local start-api --port=8081 --region=ca-central-1 --template=\"template-local.yml\" --debug --skip-pull-image",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update": "claudia update --profile claudia"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "serverless-http": "^2.3.0",
     "amazon-cognito-identity-js": "^3.0.13",
     "aws-sdk": "^2.493.0",
     "aws-serverless-express": "^3.3.6",

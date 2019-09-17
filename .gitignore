@@ -87,5 +87,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
-
+Ratio-Backend.zip
+.aws-sam/
 # End of https://www.gitignore.io/api/node
