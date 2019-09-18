@@ -43,9 +43,6 @@ module.exports = {
         var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         cognitoUser.authenticateUser(authenticationDetails, {
             onSuccess: function (result) {
-                console.log('access token + ' + result.getAccessToken().getJwtToken());
-                console.log('id token + ' + result.getIdToken().getJwtToken());
-                console.log('refresh token + ' + result.getRefreshToken().getToken());
                 res.send(result);
             },
             onFailure: function (err) {
@@ -62,12 +59,97 @@ module.exports = {
             Pool: userPool
         };
         var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-        cognitoUser.confirmRegistration(req.body.code, true, function(err, result) {
+        cognitoUser.confirmRegistration(req.body.code, true, function (err, result) {
             if (err) {
                 console.log(err);
                 return;
             }
             res.send(result);
         });
+    },
+
+    async forgotPassword(req, res) {
+        var userData = {
+            Username: req.body.email,
+            Pool: userPool
+        };
+        var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+        cognitoUser.forgotPassword({
+            onSuccess: function (result) {
+                res.send(result);
+            },
+            onFailure: function (err) {
+                res.send(err);
+            },
+        });
+    },
+
+    async resetPassword(req, res) {
+        var userData = {
+            Username: req.body.email,
+            Pool: userPool
+        };
+        var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+        cognitoUser.confirmPassword(req.body.code, req.body.password, {
+            onSuccess: function (result) {
+                res.send(result);
+            },
+            onFailure: function (err) {
+                res.send(err);
+            },
+        });
+    },
+
+    async deleteUser(req, res) {
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (session.isValid()) {
+                    cognitoUser.deleteUser(function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+                        res.send(result);
+                    });
+                } else {
+                    res.send(err);
+                }
+            });
+        }
+    },
+
+    async logout(req, res) {
+        var cognitoUser = userPool.getCurrentUser();
+
+        if (cognitoUser != null) {
+            cognitoUser.signOut();
+            res.send({message: "SUCCESS"});
+            return;
+        }
+        res.send({message: "FAILED"});
+    },
+
+    async changePassword(req, res) {
+        var cognitoUser = userPool.getCurrentUser();
+        if (cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (session.isValid()) {
+                    cognitoUser.changePassword(req.body.oldPassword, req.body.newPassword, function(err, result) {
+                        if (err) {
+                            res.send(err.message);
+                            return;
+                        }
+                        res.send(result);
+                    });
+                } else {
+                    res.send(err.message);
+                }
+            });
+        }
+        else{
+            res.send("FAILED: NOT LOGGED IN");
+        }
     }
 }

@@ -10,8 +10,22 @@ server.use(express.urlencoded({ extended: true, strict: false })); //serverless
 server.use(bodyParser.json())
 server.use(cors())
 
-require('./routes/authRoute')(server)
+const session = require('express-session');
+const DynamoStore = require('connect-dynamodb-session')(session);
+server.use(session({
+    cookie: { maxAge: 1209600000 },
+    secret: 'PFE2019_RATIO',
+    store: new DynamoStore({
+        region: 'ca-central-1',
+        tableName: 'ratio_session',
+        autoCreate: true
+    })
+}));
+
 require('./routes/DiagnosticRoute')(server)
+require('./routes/authRoute')(server)
+require('./routes/uploadRoute')(server)
+require('./routes/projectRoute')(server)
 
 module.exports = server;
 

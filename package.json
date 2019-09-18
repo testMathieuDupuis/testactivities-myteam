@@ -16,12 +16,17 @@
     "aws-sdk": "^2.493.0",
     "aws-serverless-express": "^3.3.6",
     "body-parser": "^1.19.0",
+    "connect-dynamodb-session": "^1.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.1",
     "morgan": "^1.9.1",
+    "multer": "^1.4.1",
     "node-fetch": "^2.6.0",
-    "request": "^2.88.0"
+    "pdf-parse": "^1.1.1",
+    "request": "^2.88.0",
+    "uuid": "^3.3.2"
   }
 }
