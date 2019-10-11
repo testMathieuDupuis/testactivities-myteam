@@ -1,17 +1,14 @@
 {
   "name": "ratio_backend",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "local": "sam local start-api --port=8081 --region=ca-central-1 --template=\"template-local.yml\" --debug --skip-pull-image",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "update": "claudia update --profile claudia"
+    "test": "echo \"Error: no test specified\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "serverless-http": "^2.3.0",
     "amazon-cognito-identity-js": "^3.0.13",
     "aws-sdk": "^2.493.0",
     "aws-serverless-express": "^3.3.6",
@@ -20,6 +17,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
+    "helmet": "^3.21.1",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.1",
     "morgan": "^1.9.1",
@@ -27,6 +25,7 @@
     "node-fetch": "^2.6.0",
     "pdf-parse": "^1.1.1",
     "request": "^2.88.0",
+    "serverless-http": "^2.3.0",
     "uuid": "^3.3.2"
   }
 }

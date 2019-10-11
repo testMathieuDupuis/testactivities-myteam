@@ -7,21 +7,18 @@ const uuidv1 = require('uuid/v1');
 
 var AWS = require("aws-sdk");
 
-const poolData = {
-  UserPoolId: "ca-central-1_jDy9yZPwd", // Your user pool id here    
-  ClientId: "1vab45nv048apmbc85ljd4pf3q" // Your client id here
-};
+const config = require("../config/config.js");
 
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
 
 AWS.config.update({
-  region: "ca-central-1"
+  region: config.aws_region
 });
 
 var ddb = new AWS.DynamoDB();
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-var table = "ratio_project";
+var table = config.tables.project;
 
 module.exports = {
 
@@ -64,7 +61,7 @@ module.exports = {
       cognitoUser.getSession(function (err, session) {
         if (session.isValid()) {
           var params = {
-            TableName: 'ratio_project',
+            TableName: table,
             Item: {
               'id': {S: uuidv1()},
               'date': {S: new Date().toISOString().slice(0, 10)},

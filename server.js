@@ -3,21 +3,23 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const serverConfig = require('./config/config')
+const helmet = require('helmet') //protect againts known vulnerability
 const server = express()
 
 server.use(morgan('combined'))
 server.use(express.urlencoded({ extended: true, strict: false })); //serverless
 server.use(bodyParser.json())
 server.use(cors())
+server.use(helmet())
 
 const session = require('express-session');
 const DynamoStore = require('connect-dynamodb-session')(session);
 server.use(session({
-    cookie: { maxAge: 1209600000 },
-    secret: 'PFE2019_RATIO',
+    cookie: { maxAge: serverConfig.cookie_age },
+    secret: serverConfig.session_secret,
     store: new DynamoStore({
-        region: 'ca-central-1',
-        tableName: 'ratio_session',
+        region: serverConfig.aws_region,
+        tableName: serverConfig.tables.session,
         autoCreate: true
     })
 }));

@@ -6,13 +6,8 @@ const jwkToPem = require('jwk-to-pem');
 const jwt = require('jsonwebtoken');
 global.fetch = require('node-fetch');
 
-const poolData = {
-    UserPoolId: "ca-central-1_jDy9yZPwd", // Your user pool id here    
-    ClientId: "1vab45nv048apmbc85ljd4pf3q" // Your client id here
-};
-const pool_region = 'ca-central-1';
-
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+const config = require("../config/config.js");
+const userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
 
 module.exports = {
     async register(req, res) {
