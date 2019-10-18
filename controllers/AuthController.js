@@ -1,16 +1,15 @@
+global.fetch = require('node-fetch'); //use by cognito internally
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
-const CognitoUserPool = AmazonCognitoIdentity.CognitoUserPool;
 const AWS = require('aws-sdk');
 const request = require('request');
 const jwkToPem = require('jwk-to-pem');
 const jwt = require('jsonwebtoken');
-global.fetch = require('node-fetch');
-
-const config = require("../config/config.js");
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
 
 module.exports = {
     async register(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var attributeList = [];
         attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "email", Value: req.body.email }));
         attributeList.push(new AmazonCognitoIdentity.CognitoUserAttribute({ Name: "name", Value: req.body.name }));
@@ -26,6 +25,9 @@ module.exports = {
     },
 
     async login(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({
             Username: req.body.email,
             Password: req.body.password,
@@ -49,6 +51,9 @@ module.exports = {
     },
 
     async confirmeEmail(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var userData = {
             Username: req.body.email,
             Pool: userPool
@@ -64,6 +69,9 @@ module.exports = {
     },
 
     async forgotPassword(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var userData = {
             Username: req.body.email,
             Pool: userPool
@@ -80,6 +88,9 @@ module.exports = {
     },
 
     async resetPassword(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var userData = {
             Username: req.body.email,
             Pool: userPool
@@ -96,6 +107,8 @@ module.exports = {
     },
 
     async deleteUser(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
         var cognitoUser = userPool.getCurrentUser();
 
         if (cognitoUser != null) {
@@ -116,6 +129,9 @@ module.exports = {
     },
 
     async logout(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var cognitoUser = userPool.getCurrentUser();
 
         if (cognitoUser != null) {
@@ -127,6 +143,9 @@ module.exports = {
     },
 
     async changePassword(req, res) {
+        var config = require("../config/config")(req);
+        var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
         var cognitoUser = userPool.getCurrentUser();
         if (cognitoUser != null) {
             cognitoUser.getSession(function (err, session) {

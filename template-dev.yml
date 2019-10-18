@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  ratiobackend:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: 'ratio_backend2'
+      Timeout: 50
+      CodeUri: './'
+      Runtime: nodejs10.x
+      Handler: index.handler
+      AutoPublishAlias: dev
+      Environment:
+        Variables:
+          IS_LAMBDA: 1

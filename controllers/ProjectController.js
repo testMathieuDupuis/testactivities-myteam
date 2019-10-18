@@ -2,30 +2,26 @@ var express = require('express');
 var app = express();
 var multer = require('multer')
 var cors = require('cors');
+
+global.fetch = require('node-fetch'); //use by cognito internally
 const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 const uuidv1 = require('uuid/v1');
-
 var AWS = require("aws-sdk");
-
-const config = require("../config/config.js");
-
-const userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
-
-AWS.config.update({
-  region: config.aws_region
-});
-
-var ddb = new AWS.DynamoDB();
-var docClient = new AWS.DynamoDB.DocumentClient();
-
-var table = config.tables.project;
 
 module.exports = {
 
   async getAllProjects(req, res) {
+    var config = require("../config/config")(req);
+    var table = config.tables.project;
+    AWS.config.update({
+      region: config.aws_region
+    });
+
     var params = {
       TableName: table
     };
+
+    var docClient = new AWS.DynamoDB.DocumentClient();
     docClient.scan(params, onScan);
     function onScan(err, data) {
       if (err) {
@@ -44,6 +40,8 @@ module.exports = {
         "id": req.body.id
       }
     };
+
+    var docClient = new AWS.DynamoDB.DocumentClient();
     docClient.get(params, function (err, data) {
       if (err) {
         console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
@@ -55,6 +53,10 @@ module.exports = {
   },
 
   async createProject(req, res) {
+    var config = require("../config/config")(req);
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(config.cognito_pool);
+
+    var ddb = new AWS.DynamoDB();
     var cognitoUser = userPool.getCurrentUser();
 
     if (cognitoUser != null) {

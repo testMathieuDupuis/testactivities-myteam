@@ -89,4 +89,5 @@ typings/
 .dynamodb/
 Ratio-Backend.zip
 .aws-sam/
+template-out.yml
 # End of https://www.gitignore.io/api/node

@@ -14,6 +14,7 @@ RATIO_BE_SESSION_SECRET : Secret to validate session, need to define it only for
 RATIO_BE_STAGE : Stage of the application ex: dev|prod (Default: dev)
 RATIO_BE_TABLE_PROJECT : Name of the project table (Default: ratio_project_dev)
 RATIO_BE_TABLES_SESSION : Name of the project table (Default : ratio_session_dev)
+IS_LAMBDA : Set to 0 on local (always) even if you use lambda local (the template will set it for you)
 
 ### Prerequisites
 For local "labda" only:
@@ -35,11 +36,13 @@ use --skip-pull-image only at the second time, it's a little quicker
 Not test implemented yet....
 
 ## Deployment
-To deploy in prod
+To deploy on AWS
 
 ```
-sam build --template=template-prod.yml
-sam publish 
+sam build --template=template-dev.yml
+sam package --s3-bucket ratio-code --output-template-file template-out.yml
+aws lambda update-function-code --function-name="ratio_backend" --s3-bucket="ratio-code" --no-publish --s3-key="{name of the package}"
+aws lambda publish-version --function-name="ratio_backend" --description="{version}"
 ```
 
 ## Contributing

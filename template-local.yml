@@ -2,17 +2,19 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Resources:
-  MyFunction:
+  ratiobackend:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: 'ratio_backend'
       Timeout: 50
       CodeUri: ./
       Runtime: nodejs10.x
-      Handler: index.server
+      Handler: index.handler
       Environment:
         Variables:
           RATIO_BE_COGNITO_POOL_ID: ca-central-1_jDy9yZPwd
           RATIO_BE_COGNITO_CLIENT_ID: 1vab45nv048apmbc85ljd4pf3q
+          IS_LAMBDA: 1
       Events:
         ProxyApiGreedy:
           Type: Api

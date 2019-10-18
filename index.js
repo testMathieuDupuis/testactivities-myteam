@@ -1,7 +1,10 @@
 const serverless = require('serverless-http');
 const server = require('./server');
-const handler = serverless(server);
-module.exports.isLambda=true;
-module.exports.server = async (event, context) => {
- return await handler(event, context);
-};
+
+module.exports.handler = serverless(server, {
+    request: function (req, event, context) {
+        // context.callbackWaitsForEmptyEventLoop = false;
+        req.event = event;
+        req.context = context;
+    },
+ });
