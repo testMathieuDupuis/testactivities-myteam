@@ -2,7 +2,7 @@ const DiagnosticController = require('../controllers/DiagnosticController')
 
 module.exports = DiagnosticRoutes => {
     DiagnosticRoutes.get(
-        '/ping',
+        '/diag',
         DiagnosticController.ping
     )
 }
