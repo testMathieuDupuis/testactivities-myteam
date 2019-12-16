@@ -33,7 +33,7 @@ module.exports = server;
 
 if (configs.isLambda == 0) 
 {
-    console.log("Start as standalone")
+    console.log("Start as standalone host: localhost:"+configs.port)
     server.listen(configs.port)
 }
 else
