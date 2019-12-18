@@ -14,6 +14,9 @@ AWS.config.update({
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
+//TODO This module should not exist except to get a signed url
+//TODO to check if some AI is there
+
 module.exports = {
 
   async uploadFile(req, res) {
@@ -34,7 +37,8 @@ module.exports = {
   async readFile(req, res) {
     var params = { Bucket: 'ratio-dev-raw', Key: req.body.fileName };
     s3.getObject(params, function (err, resp) {
-      if (err) res.send(err);
+      if 
+        (err) res.send(err);
       else {
         pdf(resp.Body).then(function (textData) {
           var params = {
@@ -44,6 +48,7 @@ module.exports = {
           function onScan(err, data) {
             if (err) {
               console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+              res.status(500).send(err);
             } else {
 
               resultsExtract = [];

@@ -16,7 +16,8 @@ module.exports = {
 
         userPool.signUp(req.body.email, req.body.password, attributeList, null, function (err, result) {
             if (err) {
-                console.log(err);
+                console.error(err);
+                res.status(500).send(err);
                 return;
             }
             cognitoUser = result.user;
@@ -44,7 +45,7 @@ module.exports = {
             },
             onFailure: function (err) {
                 res.send(cognitoUser);
-                console.log(err);
+                console.error(err);
             },
 
         });
@@ -61,7 +62,8 @@ module.exports = {
         var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
         cognitoUser.confirmRegistration(req.body.code, true, function (err, result) {
             if (err) {
-                console.log(err);
+                console.error(err);
+                res.status(500).send(err);
                 return;
             }
             res.send(result);
@@ -116,7 +118,8 @@ module.exports = {
                 if (session.isValid()) {
                     cognitoUser.deleteUser(function (err, result) {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
+                            res.status(500).send(err);
                             return;
                         }
                         res.send(result);
@@ -137,9 +140,10 @@ module.exports = {
         if (cognitoUser != null) {
             cognitoUser.signOut();
             res.send({message: "SUCCESS"});
-            return;
+            
         }
-        res.send({message: "FAILED"});
+        else
+            res.send({message: "FAILED"});
     },
 
     async changePassword(req, res) {

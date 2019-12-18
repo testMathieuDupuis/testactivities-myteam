@@ -12,20 +12,23 @@ module.exports = {
 
   async getAllProjects(req, res) {
     var config = require("../config/config")(req);
-    var table = config.tables.project;
+    console.log("Config:"+JSON.stringify(config));
+
     AWS.config.update({
       region: config.aws_region
     });
 
     var params = {
-      TableName: table
+      TableName: config.tables.project
     };
+    console.log("ParamDyn:"+JSON.stringify(params));
 
     var docClient = new AWS.DynamoDB.DocumentClient();
-    docClient.scan(params, onScan);
+    docClient.scan(params, onScan); //TODO a changer, on doit faire des getItem ou Query
     function onScan(err, data) {
       if (err) {
         console.error("Unable to scan the table. Error JSON:", JSON.stringify(err, null, 2));
+        res.status(500).send(err);
       } else {
         console.log("Scan succeeded.");
         res.send(data.Items);
@@ -34,8 +37,9 @@ module.exports = {
   },
 
   async getProject(req, res) {
+    var config = require("../config/config")(req);
     var params = {
-      TableName: table,
+      TableName: config.tables.project,
       Key: {
         "id": req.body.id
       }
@@ -45,6 +49,7 @@ module.exports = {
     docClient.get(params, function (err, data) {
       if (err) {
         console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+        res.status(500).send(err);
       } else {
         console.log("GetItem succeeded:");
         res.send(data.Item);
@@ -63,7 +68,7 @@ module.exports = {
       cognitoUser.getSession(function (err, session) {
         if (session.isValid()) {
           var params = {
-            TableName: table,
+            TableName: config.tables.project,
             Item: {
               'id': {S: uuidv1()},
               'date': {S: new Date().toISOString().slice(0, 10)},
@@ -85,5 +90,7 @@ module.exports = {
         }
       });
     }
+    else
+      res.status(500).send("No user");
   }
 }

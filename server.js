@@ -21,7 +21,10 @@ server.use(session({
         region: configs.aws_region,
         tableName: configs.tables.session,
         autoCreate: true
-    })
+    }),
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
 }));
 
 require('./routes/DiagnosticRoute')(server)
